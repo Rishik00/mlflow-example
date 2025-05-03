@@ -4,6 +4,7 @@ import mlflow
 import optuna
 import pandas as pd
 import xgboost as xgb
+from dotenv import load_dotenv
 from sklearn.model_selection import train_test_split
 
 ## Local imports
@@ -11,7 +12,8 @@ from model_tuning import objective, champion_callback
 from data_gen import generate_synthetic_timeseries
 from utils import start_mlflow_server, get_or_create_experiment
 
-BASE_DIR = ''
+load_dotenv()
+BASE_DIR = os.getenv("BASE_DIR", "content/")
 
 if __name__ == "__main__":
     # override Optuna's default logging to ERROR only
@@ -19,8 +21,8 @@ if __name__ == "__main__":
     run_name = 'first_attempt'
 
 
-    if os.path.exists(f'{BASE_DIR}/data/sample_data.csv'):
-        df = pd.read_csv(f'{BASE_DIR}/data/sample_data.csv')
+    if os.path.exists(f'{BASE_DIR}/sample_data.csv'):
+        df = pd.read_csv(f'{BASE_DIR}/sample_data.csv')
 
     else:
         generate_synthetic_timeseries(
@@ -29,7 +31,7 @@ if __name__ == "__main__":
             competitor_price_effect = -50.0,
             file_name = 'sample_data.csv'
         )
-        df = pd.read_csv(f'{BASE_DIR}/data/sample_data.csv')
+        df = pd.read_csv(f'{BASE_DIR}/sample_data.csv')
 
     experiment_id = get_or_create_experiment("Apples Demand")
     mlflow.set_experiment(experiment_id=experiment_id)

@@ -1,6 +1,5 @@
 import optuna
 import mlflow
-
 from sklearn.metrics import mean_absolute_error
 
 # override Optuna's default logging to ERROR only
