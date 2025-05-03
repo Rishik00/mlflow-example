@@ -102,7 +102,7 @@ def generate_synthetic_timeseries(
     )
     
     df.to_csv(
-        'sample_timeseries_data.csv'
+        'sample_data.csv'
     )
 
     return df

@@ -13,21 +13,22 @@ from data_gen import generate_synthetic_timeseries
 from utils import start_mlflow_server, get_or_create_experiment
 
 load_dotenv()
-BASE_DIR = os.getenv("BASE_DIR", "content/")
+BASE_DIR = os.getenv("BASE_DIR", "content")
 
 if __name__ == "__main__":
     # override Optuna's default logging to ERROR only
     optuna.logging.set_verbosity(optuna.logging.ERROR)
     run_name = 'first_attempt'
-
-
+    
+    start_mlflow_server()
+    print("mlflow server at 8080")
     if os.path.exists(f'{BASE_DIR}/sample_data.csv'):
         df = pd.read_csv(f'{BASE_DIR}/sample_data.csv')
 
     else:
         generate_synthetic_timeseries(
             base_demand = 1000,
-            n_rows = 10000,
+            n_rows = 100,
             competitor_price_effect = -50.0,
             file_name = 'sample_data.csv'
         )
