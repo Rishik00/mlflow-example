@@ -43,12 +43,13 @@ if __name__ == "__main__":
     dvalid = xgb.DMatrix(valid_x, label=valid_y)
     
     # Initialize the Optuna study
+    func = lambda trial: objective(trial, dtrain, dvalid, valid_y)
     study = optuna.create_study(direction="minimize")
 
     # Execute the hyperparameter optimization trials.
     # Note the addition of the `champion_callback` inclusion to control our logging
     with mlflow.start_run(experiment_id=experiment_id, run_name=run_name, nested=True):
-        study.optimize(objective, n_trials=500, callbacks=[champion_callback])
+        study.optimize(func, n_trials=500, callbacks=[champion_callback])
 
         mlflow.log_params(study.best_params)
         mlflow.log_metric("best_mse", study.best_value)

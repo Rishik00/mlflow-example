@@ -1,6 +1,7 @@
 import optuna
 import mlflow
 from sklearn.metrics import mean_absolute_error
+import xgboost
 
 # override Optuna's default logging to ERROR only
 optuna.logging.set_verbosity(optuna.logging.ERROR)
@@ -29,7 +30,6 @@ def champion_callback(
 
 def objective(
         trial, 
-        xgb, 
         dtrain, 
         dvalid, 
         valid_y
@@ -52,7 +52,7 @@ def objective(
             params["grow_policy"] = trial.suggest_categorical(
                 "grow_policy", ["depthwise", "lossguide"]
             )
-
+        xgb = xgboost.XGBRegressor()
         bst = xgb.train(params, dtrain)
         preds = bst.predict(dvalid)
         error = mean_absolute_error(valid_y, preds)
